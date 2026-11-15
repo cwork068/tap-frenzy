@@ -1,0 +1,40 @@
+workflows:
+  tap-frenzy:
+    name: Tap Frenzy iOS Build
+    instance_type: mac_mini_m2
+    max_build_duration: 20
+    environment:
+      xcode: latest
+    scripts:
+      - name: Check round scoring and timing
+        script: |
+          set -euo pipefail
+          mkdir -p build
+          swiftc TapFrenzy/GameRound.swift Tests/GameRoundChecks.swift -o build/game-round-checks
+          ./build/game-round-checks
+      - name: Generate the Xcode project if needed
+        script: |
+          set -euo pipefail
+          if [[ ! -f TapFrenzy.xcodeproj/project.pbxproj ]]; then
+            if ! command -v xcodegen >/dev/null 2>&1; then
+              HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+            fi
+            xcodegen generate
+          fi
+      - name: Compile for iOS Simulator
+        script: |
+          set -euo pipefail
+          xcodebuild \
+            -project TapFrenzy.xcodeproj \
+            -scheme TapFrenzy \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+      - name: Package the Xcode project
+        script: |
+          set -euo pipefail
+          zip -qr build/TapFrenzy-Xcode.zip TapFrenzy.xcodeproj TapFrenzy Tests project.yml README.md -x '*/xcuserdata/*' '*.xcuserstate'
+    artifacts:
+      - build/TapFrenzy-Xcode.zip
