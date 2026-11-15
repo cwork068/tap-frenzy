@@ -30,11 +30,21 @@ workflows:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build/DerivedData \
+            ARCHS=arm64 \
             CODE_SIGNING_ALLOWED=NO \
             build
+      - name: Package the simulator app for Appetize
+        script: |
+          set -euo pipefail
+          archive="$PWD/build/TapFrenzy-Simulator.zip"
+          cd build/DerivedData/Build/Products/Debug-iphonesimulator
+          test -f TapFrenzy.app/Info.plist
+          test -x TapFrenzy.app/TapFrenzy
+          zip -qry "$archive" TapFrenzy.app
       - name: Package the Xcode project
         script: |
           set -euo pipefail
           zip -qr build/TapFrenzy-Xcode.zip TapFrenzy.xcodeproj TapFrenzy Tests project.yml README.md -x '*/xcuserdata/*' '*.xcuserstate'
     artifacts:
+      - build/TapFrenzy-Simulator.zip
       - build/TapFrenzy-Xcode.zip

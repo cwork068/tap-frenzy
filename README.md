@@ -38,6 +38,10 @@ Two stretch features are implemented from the tutorial brief. The score animates
 
 Codemagic generates `TapFrenzy.xcodeproj` from `project.yml` when the project is absent. A successful build offers `TapFrenzy-Xcode.zip` in **Artifacts**. It contains the project and its sources. If your submission needs an Xcode project in GitHub, extract the ZIP, copy just `TapFrenzy.xcodeproj` to the repository root, commit it, and rebuild that commit. If you later add or relocate source files, regenerate the project or update its file references in Xcode.
 
+## Run in a Windows browser
+
+Download `TapFrenzy-Simulator.zip` from the latest successful Codemagic build's **Artifacts**. It contains the compiled ARM64 iOS Simulator bundle at `TapFrenzy.app/`. Upload the ZIP directly to [Appetize](https://appetize.io/upload) and launch an iPhone running iOS 17 or later. Use the checklist below for the gameplay checks available in your simulator session.
+
 ## Run and check in Xcode
 
 Extract the artifact, open `TapFrenzy.xcodeproj`, select an iPhone simulator, and press **⌘R**. On a Mac with XcodeGen installed, you can also run `xcodegen generate` in the repository root.
