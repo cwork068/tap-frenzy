@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-struct ContentView: View {
+struct GameView: View {
     @AppStorage("highScore") private var highScore = 0
     @AppStorage("gamesPlayed") private var gamesPlayed = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -9,11 +9,6 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var round = GameRound()
     @State private var isNewBest = false
-
-    private let background = Color(red: 0.055, green: 0.069, blue: 0.108)
-    private let panel = Color(red: 0.10, green: 0.12, blue: 0.18)
-    private let muted = Color(red: 0.71, green: 0.75, blue: 0.83)
-    private let mint = Color(red: 0.45, green: 0.97, blue: 0.76)
 
     var body: some View {
         GeometryReader { geometry in
@@ -50,9 +45,9 @@ struct ContentView: View {
         }
         .foregroundStyle(.white)
         .background {
-            background.overlay(alignment: .top) {
+            GameTheme.background.overlay(alignment: .top) {
                 RadialGradient(
-                    colors: [Color(red: 0.12, green: 0.24, blue: 0.24), .clear],
+                    colors: [GameTheme.backgroundGlow, .clear],
                     center: .top,
                     startRadius: 0,
                     endRadius: 450
@@ -83,9 +78,9 @@ struct ContentView: View {
         HStack(spacing: 12) {
             Image(systemName: "bolt.fill")
                 .font(.headline)
-                .foregroundStyle(mint)
+                .foregroundStyle(GameTheme.accent)
                 .frame(width: 40, height: 40)
-                .background(mint.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                .background(GameTheme.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
                 .accessibilityHidden(true)
 
             Text("Tap Frenzy")
@@ -96,42 +91,8 @@ struct ContentView: View {
         }
     }
 
-    private var timerColor: Color {
-        switch round.secondsRemaining {
-        case 0...3: Color(red: 1, green: 0.51, blue: 0.53)
-        case 4...6: Color(red: 1, green: 0.76, blue: 0.42)
-        default: mint
-        }
-    }
-
     private var timer: some View {
-        VStack(spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Time remaining")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(muted)
-                Spacer()
-                Text("\(round.secondsRemaining)s")
-                    .font(.headline.monospacedDigit())
-                    .foregroundStyle(timerColor)
-            }
-            GeometryReader { geometry in
-                Capsule()
-                    .fill(.white.opacity(0.10))
-                    .overlay(alignment: .leading) {
-                        Capsule()
-                            .fill(timerColor)
-                            .frame(width: geometry.size.width * CGFloat(round.progress))
-                    }
-            }
-            .frame(height: 7)
-            .accessibilityHidden(true)
-        }
-        .padding(16)
-        .background(panel, in: RoundedRectangle(cornerRadius: 18))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Time remaining")
-        .accessibilityValue("\(round.secondsRemaining) seconds")
+        RoundTimerView(secondsRemaining: round.secondsRemaining, progress: round.progress)
     }
 
     private func controls(buttonSize: CGFloat) -> some View {
@@ -139,7 +100,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 Text(round.phase == .over ? "Final score" : "Score")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(muted)
+                    .foregroundStyle(GameTheme.secondaryText)
                 Text(round.score.formatted())
                     .font(.system(size: 58, weight: .black, design: .rounded))
                     .monospacedDigit()
@@ -148,52 +109,17 @@ struct ContentView: View {
             }
             .accessibilityElement(children: .combine)
 
-            Button(action: handleTap) {
-                VStack(spacing: 6) {
-                    Image(systemName: round.phase == .over ? "arrow.clockwise" : "bolt.fill")
-                        .font(.title3.weight(.bold))
-                        .accessibilityHidden(true)
-                    Text(round.phase == .over ? "Try again" : "TAP")
-                        .font(.title2.weight(.black))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                }
-                .foregroundStyle(background)
-                .frame(width: buttonSize, height: buttonSize)
-                .background {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Color(red: 0.69, green: 1, blue: 0.83), mint],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: mint.opacity(0.25), radius: 22, y: 9)
-                }
-                .overlay {
-                    Circle().strokeBorder(.white.opacity(0.45), lineWidth: 1)
-                }
-                .contentShape(Circle())
-            }
-            .buttonStyle(TapButtonStyle())
-            .accessibilityLabel(buttonLabel)
+            TapControl(phase: round.phase, size: buttonSize, action: handleTap)
 
             Text(roundMessage)
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(isNewBest && round.phase == .over ? mint : muted)
+                .foregroundStyle(
+                    isNewBest && round.phase == .over ? GameTheme.accent : GameTheme.secondaryText
+                )
                 .multilineTextAlignment(.center)
                 .frame(minHeight: 24)
         }
         .padding(.vertical, 2)
-    }
-
-    private var buttonLabel: String {
-        switch round.phase {
-        case .idle: "Start round"
-        case .playing: "Tap to score"
-        case .over: "Try again"
-        }
     }
 
     private var roundMessage: String {
@@ -219,13 +145,13 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 6) {
             Label(title, systemImage: icon)
                 .font(.footnote.weight(.semibold))
-                .foregroundStyle(muted)
+                .foregroundStyle(GameTheme.secondaryText)
             Text(value.formatted())
                 .font(.title3.weight(.bold).monospacedDigit())
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(panel, in: RoundedRectangle(cornerRadius: 16))
+        .background(GameTheme.surface, in: RoundedRectangle(cornerRadius: 16))
         .accessibilityElement(children: .combine)
     }
 
@@ -257,17 +183,6 @@ struct ContentView: View {
     }
 }
 
-private struct TapButtonStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.96 : 1)
-            .opacity(configuration.isPressed ? 0.86 : 1)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.13), value: configuration.isPressed)
-    }
-}
-
 #Preview {
-    ContentView()
+    GameView()
 }
