@@ -25,7 +25,7 @@ The code is organized by feature. `GameRound` is a Swift value type with idle, p
 
 ## Visual theme
 
-The game offers System, Light, and Dark appearances. Adaptive colours keep the button, text, and countdown ring readable in each mode. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The score uses stable digit widths, accepted taps give light haptic feedback, and animations respect Reduce Motion.
+The game offers System, Light, and Dark appearances. Adaptive colours keep the button, text, and countdown ring readable in each mode. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The score uses stable digit widths, accepted taps give light haptic feedback, and animations respect Reduce Motion. The top bar shows the best score; the bottom stats panel shows completed rounds and the last score. The last score uses a new `lastScore` key and appears after the first completed round on an upgraded install.
 
 ## Build from Windows
 
@@ -46,7 +46,7 @@ Clone the repository on a Mac, open `TapFrenzy.xcodeproj`, select an iPhone simu
 
 - Confirm the first tap starts the timer and scores one point. Tap rapidly and watch the score increase.
 - Let the timer expire. Check the final score, best score, and completed round count. Tap **Play Again** to return to idle, then **TAP** to start the next round.
-- Beat your previous best, then complete a lower-scoring round. Force-quit and reopen the app. Check that the best score and round count persist.
+- Beat your previous best, then complete a lower-scoring round. Force-quit and reopen the app. Check that the best score, round count, and last score persist.
 - Switch between System, Light, and Dark during a round. Confirm the score and countdown continue, and that the selection persists after a relaunch.
 - Background the app past the deadline, return, and check that the result appears without awarding a late tap.
 - Rotate during a round and test a compact iPhone. Check that the score, timer, and button remain usable.

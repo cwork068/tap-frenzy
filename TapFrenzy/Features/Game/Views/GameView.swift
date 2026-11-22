@@ -5,6 +5,7 @@ import UIKit
 struct GameView: View {
     @AppStorage("highScore") private var highScore = 0
     @AppStorage("gamesPlayed") private var gamesPlayed = 0
+    @AppStorage("lastScore") private var lastScore = -1
     @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -25,35 +26,44 @@ struct GameView: View {
                 Group {
                     if wide {
                         HStack(alignment: .center, spacing: 32) {
-                            VStack(alignment: .leading, spacing: 22) {
+                            VStack(alignment: .leading, spacing: 18) {
                                 header
+                                Spacer(minLength: 12)
                                 scoreView
                                 if round.phase == .over { resultStatus }
-                                roundsPlayed
+                                Spacer(minLength: 12)
+                                statsBoard
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(maxWidth: .infinity, minHeight: geometry.size.height - 32,
+                                   alignment: .leading)
                             primaryControl(ringSize: ringSize)
                                 .frame(maxWidth: .infinity)
                         }
                     } else {
-                        VStack(spacing: 18) {
+                        VStack(spacing: 0) {
                             header
+                            Spacer(minLength: 14)
                             scoreView
+                            Spacer(minLength: 14)
                             if round.phase == .over {
                                 resultStatus
+                                    .padding(.top, 4)
                                 primaryControl(ringSize: ringSize)
                             } else {
                                 primaryControl(ringSize: ringSize)
                                 instruction
+                                    .padding(.top, 10)
                             }
-                            roundsPlayed
+                            Spacer(minLength: 24)
+                            statsBoard
                         }
+                        .frame(minHeight: geometry.size.height - 28)
                     }
                 }
                 .frame(maxWidth: 760)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+                .padding(.vertical, 14)
+                .frame(maxWidth: .infinity, alignment: .top)
             }
         }
         .foregroundStyle(GameTheme.text)
@@ -75,11 +85,18 @@ struct GameView: View {
 
     private var header: some View {
         HStack(spacing: 12) {
-            Text("Tap Frenzy")
-                .font(.headline.weight(.heavy))
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .accessibilityAddTraits(.isHeader)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Tap Frenzy")
+                    .font(.headline.weight(.heavy))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .accessibilityAddTraits(.isHeader)
+                Text("10-second speed round")
+                    .font(.caption)
+                    .foregroundStyle(GameTheme.secondaryText)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
             Spacer(minLength: 4)
             VStack(alignment: .trailing, spacing: 0) {
                 Text("BEST")
@@ -186,11 +203,50 @@ struct GameView: View {
             .multilineTextAlignment(.center)
     }
 
-    private var roundsPlayed: some View {
-        Text("Rounds played: \(gamesPlayed)")
-            .font(.footnote)
-            .foregroundStyle(GameTheme.secondaryText)
-            .frame(maxWidth: .infinity)
+    private var statsBoard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("YOUR STATS")
+                .font(.caption2.weight(.bold))
+                .tracking(2)
+                .foregroundStyle(GameTheme.secondaryText)
+                .accessibilityAddTraits(.isHeader)
+            let stacked = dynamicTypeSize.isAccessibilitySize
+            let layout = stacked
+                ? AnyLayout(VStackLayout(spacing: 10))
+                : AnyLayout(HStackLayout(spacing: 10))
+            layout {
+                statCard("Rounds played", value: gamesPlayed.formatted(), icon: "flag.checkered")
+                statCard("Last score", value: lastScore < 0 ? "—" : lastScore.formatted(),
+                         icon: "clock.arrow.circlepath")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func statCard(_ title: String, value: String, icon: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(GameTheme.accent)
+                .frame(width: 36, height: 36)
+                .background(GameTheme.background, in: RoundedRectangle(cornerRadius: 10))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(GameTheme.secondaryText)
+                Text(value)
+                    .font(.title3.weight(.bold).monospacedDigit())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, minHeight: 54)
+        .padding(10)
+        .background(GameTheme.surface, in: RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(title), \(value)")
     }
 
     private func handleTap() {
@@ -217,6 +273,7 @@ struct GameView: View {
 
     private func saveCompletion() {
         gamesPlayed += 1
+        lastScore = round.score
         if round.bestScore > highScore { highScore = round.bestScore }
     }
 
