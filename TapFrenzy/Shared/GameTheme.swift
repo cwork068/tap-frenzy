@@ -6,6 +6,13 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
     var title: String { rawValue.capitalized }
+    var symbol: String {
+        switch self {
+        case .system: "circle.lefthalf.filled"
+        case .light: "sun.max.fill"
+        case .dark: "moon.fill"
+        }
+    }
     var colorScheme: ColorScheme? {
         switch self {
         case .system: nil
@@ -29,28 +36,36 @@ enum GameTheme {
     static let critical = Color(uiColor: .systemRed)
 }
 
-struct AppearanceMenu: View {
+struct AppearancePicker: View {
     @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         let current = AppearanceMode(rawValue: appearanceMode) ?? .system
-        Menu {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 4))
+            : AnyLayout(HStackLayout(spacing: 4))
+        layout {
             ForEach(AppearanceMode.allCases) { mode in
                 Button {
                     appearanceMode = mode.rawValue
                 } label: {
-                    if mode == current { Label(mode.title, systemImage: "checkmark") }
-                    else { Text(mode.title) }
+                    Label(mode.title, systemImage: mode.symbol)
+                        .font(.caption.weight(.semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .foregroundStyle(mode == current ? GameTheme.text : GameTheme.secondaryText)
+                        .background(mode == current ? GameTheme.raisedSurface : .clear,
+                                    in: RoundedRectangle(cornerRadius: 14))
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("\(mode.title) appearance")
+                .accessibilityValue(mode == current ? "Selected" : "")
             }
-        } label: {
-            Image(systemName: "circle.lefthalf.filled")
-                .font(.title3)
-                .foregroundStyle(GameTheme.text)
-                .frame(width: 44, height: 44)
-                .contentShape(Rectangle())
         }
-        .accessibilityLabel("Appearance, \(current.title) selected")
-        .accessibilityHint("Choose System, Light, or Dark")
+        .padding(4)
+        .background(GameTheme.surface, in: RoundedRectangle(cornerRadius: 18))
+        .frame(maxWidth: 320)
     }
 }

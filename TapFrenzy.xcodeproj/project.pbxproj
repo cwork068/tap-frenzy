@@ -55,6 +55,7 @@
 			children = (
 				A00000000000000000000042 /* App */,
 				A00000000000000000000043 /* Features */,
+				A00000000000000000000048 /* Shared */,
 			);
 			path = TapFrenzy;
 			sourceTree = "<group>";
@@ -71,25 +72,25 @@
 		A00000000000000000000043 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000044 /* Game */,
+				A00000000000000000000044 /* TapFrenzy */,
+				A00000000000000000000049 /* LightItUp */,
 			);
 			path = Features;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000044 /* Game */ = {
+		A00000000000000000000044 /* TapFrenzy */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000045 /* Model */,
 				A00000000000000000000046 /* Views */,
 			);
-			path = Game;
+			path = TapFrenzy;
 			sourceTree = "<group>";
 		};
 		A00000000000000000000045 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000021 /* GameRound.swift */,
-				A00000000000000000000028 /* LightItUpRound.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -97,10 +98,41 @@
 		A00000000000000000000046 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000022 /* GameTheme.swift */,
 				A00000000000000000000023 /* GameView.swift */,
 				A00000000000000000000024 /* RoundTimerView.swift */,
 				A00000000000000000000025 /* TapControl.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000048 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000022 /* GameTheme.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000049 /* LightItUp */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000004A /* Model */,
+				A0000000000000000000004B /* Views */,
+			);
+			path = LightItUp;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000004A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000028 /* LightItUpRound.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000004B /* Views */ = {
+			isa = PBXGroup;
+			children = (
 				A00000000000000000000029 /* LightItUpView.swift */,
 			);
 			path = Views;

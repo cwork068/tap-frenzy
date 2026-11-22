@@ -8,19 +8,22 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Choose your game")
-                            .font(.largeTitle.weight(.bold))
-                            .accessibilityAddTraits(.isHeader)
-                        Text("Two quick challenges. One more round.")
-                            .font(.subheadline)
-                            .foregroundStyle(GameTheme.secondaryText)
-                    }
-                    Spacer(minLength: 8)
-                    AppearanceMenu()
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Choose your game")
+                        .font(.largeTitle.weight(.bold))
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Two quick challenges. One more round.")
+                        .font(.subheadline)
+                        .foregroundStyle(GameTheme.secondaryText)
                 }
                 .padding(.top, 12)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("APPEARANCE")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(GameTheme.secondaryText)
+                    AppearancePicker()
+                }
 
                 modeCard(title: "Tap Frenzy", subtitle: "Tap as fast as you can in 10 seconds",
                          icon: "bolt.fill", tint: GameTheme.accent, best: tapBest) {

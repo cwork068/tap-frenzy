@@ -27,6 +27,7 @@ struct GameView: View {
                         HStack(alignment: .center, spacing: 32) {
                             VStack(alignment: .leading, spacing: 18) {
                                 header
+                                AppearancePicker()
                                 Spacer(minLength: 12)
                                 scoreView
                                 if round.phase == .over { resultStatus }
@@ -41,6 +42,8 @@ struct GameView: View {
                     } else {
                         VStack(spacing: 0) {
                             header
+                            AppearancePicker()
+                                .padding(.top, 10)
                             Spacer(minLength: 14)
                             scoreView
                             Spacer(minLength: 14)
@@ -106,7 +109,6 @@ struct GameView: View {
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("All-time best, \(highScore)")
-            AppearanceMenu()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)

@@ -10,9 +10,9 @@ workflows:
         script: |
           set -euo pipefail
           mkdir -p build
-          swiftc TapFrenzy/Features/Game/Model/GameRound.swift Tests/GameRoundChecks.swift -o build/game-round-checks
+          swiftc TapFrenzy/Features/TapFrenzy/Model/GameRound.swift Tests/TapFrenzy/GameRoundChecks.swift -o build/game-round-checks
           ./build/game-round-checks
-          swiftc TapFrenzy/Features/Game/Model/LightItUpRound.swift Tests/LightItUpChecks.swift -o build/light-it-up-checks
+          swiftc TapFrenzy/Features/LightItUp/Model/LightItUpRound.swift Tests/LightItUp/LightItUpChecks.swift -o build/light-it-up-checks
           ./build/light-it-up-checks
       - name: Generate the Xcode project if needed
         script: |

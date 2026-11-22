@@ -9,27 +9,24 @@ TapFrenzy/
 ├── App/
 │   ├── TapFrenzyApp.swift
 │   └── HomeView.swift
-└── Features/
-    └── Game/
-        ├── Model/
-        │   ├── GameRound.swift
-        │   └── LightItUpRound.swift
-        └── Views/
-            ├── GameView.swift
-            ├── GameTheme.swift
-            ├── RoundTimerView.swift
-            ├── TapControl.swift
-            └── LightItUpView.swift
+├── Features/
+│   ├── TapFrenzy/
+│   │   ├── Model/GameRound.swift
+│   │   └── Views/ (GameView, RoundTimerView, TapControl)
+│   └── LightItUp/
+│       ├── Model/LightItUpRound.swift
+│       └── Views/LightItUpView.swift
+└── Shared/GameTheme.swift
 Tests/
-├── GameRoundChecks.swift
-└── LightItUpChecks.swift
+├── TapFrenzy/GameRoundChecks.swift
+└── LightItUp/LightItUpChecks.swift
 ```
 
-The code is organized by feature. Both round models take `ContinuousClock` instants so deadline checks can run without waiting. Tap Frenzy preserves its original `highScore` key and `gamesPlayed` count. Light It Up uses `lightItUpHighScore` and `lightItUpRounds`, with three lives and four levels at 15-second intervals. Its card counts are 3, 4, 6, and 9; lit windows shorten from 1.2 to 0.9 to 0.7 to 0.5 seconds. Appearance remains stored under `appearanceMode`.
+The code is organized by mode. Both round models take `ContinuousClock` instants so deadline checks can run without waiting. Tap Frenzy preserves its original `highScore` key and `gamesPlayed` count. Light It Up uses `lightItUpHighScore` and `lightItUpRounds`, with three lives and four levels at 15-second intervals. Its card counts are 3, 4, 6, and 9; lit windows shorten from 1.2 to 0.9 to 0.7 to 0.5 seconds. Appearance remains stored under `appearanceMode`. Shared colours and the appearance control live in `Shared/`.
 
 ## Visual theme
 
-The game offers System, Light, and Dark appearances. Backgrounds, surfaces, text, and status colours use Apple's dynamic iOS system colours, including the system Dark appearance. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The top bar shows Tap Frenzy's best score; its bottom stats panel shows completed rounds and the last score. The last score appears after the first completed round on an upgraded install.
+The game offers separate System, Light, and Dark appearance buttons on the home screen and in both modes. Backgrounds, surfaces, text, and status colours use Apple's dynamic iOS system colours, including the system Dark appearance. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The top bar shows Tap Frenzy's best score; its bottom stats panel shows completed rounds and the last score. The last score appears after the first completed round on an upgraded install.
 
 ## Build from Windows
 
@@ -57,3 +54,4 @@ Clone the repository on a Mac, open `TapFrenzy.xcodeproj`, select an iPhone simu
 - Rotate during a round and test a compact iPhone. Check that the score, timer, and button remain usable.
 - Enable Reduce Motion and check that the score and button can be used without their animations.
 - In Light It Up, tap any card to start. Catch a lit card to score; miss or tap the wrong card to lose a life. Check the grid and shorter windows at levels 2 through 4, and verify its separate best score after relaunch.
+- Switch System, Light, and Dark with their separate buttons on the home screen and during each mode. Confirm the selected appearance changes immediately without resetting a round.
