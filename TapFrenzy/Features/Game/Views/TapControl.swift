@@ -1,59 +1,49 @@
 import SwiftUI
 
 struct TapControl: View {
-    let phase: GameRound.Phase
     let size: CGFloat
+    let secondsRemaining: Int
+    let isPlaying: Bool
     let action: () -> Void
-
-    private var buttonLabel: String {
-        switch phase {
-        case .idle: "Start round"
-        case .playing: "Tap to score"
-        case .over: "Try again"
-        }
-    }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) {
-                Image(systemName: phase == .over ? "arrow.clockwise" : "bolt.fill")
-                    .font(.title3.weight(.bold))
+            VStack(spacing: 2) {
+                if !dynamicTypeSize.isAccessibilitySize {
+                    Image(systemName: "bolt.fill")
+                        .font(.title2.weight(.bold))
+                        .accessibilityHidden(true)
+                }
+                Text("TAP")
+                    .font(.system(.largeTitle, design: .rounded).weight(.black))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text("\(secondsRemaining)s")
+                    .font(.system(.title2, design: .rounded).weight(.bold))
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
                     .accessibilityHidden(true)
-                Text(phase == .over ? "Try again" : "TAP")
-                    .font(.title2.weight(.black))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
             }
-            .foregroundStyle(GameTheme.background)
+            .foregroundStyle(GameTheme.buttonText)
             .frame(width: size, height: size)
-            .background {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [GameTheme.accentHighlight, GameTheme.accent],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .shadow(color: GameTheme.accent.opacity(0.25), radius: 22, y: 9)
-            }
-            .overlay {
-                Circle().strokeBorder(.white.opacity(0.45), lineWidth: 1)
-            }
+            .background(GameTheme.buttonFill, in: Circle())
             .contentShape(Circle())
         }
-        .buttonStyle(TapButtonStyle())
-        .accessibilityLabel(buttonLabel)
+        .buttonStyle(TapButtonStyle(reduceMotion: reduceMotion))
+        .accessibilityLabel(isPlaying ? "Tap to score" : "Start round")
+        .accessibilityValue("\(secondsRemaining) seconds remaining")
     }
 }
 
 private struct TapButtonStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let reduceMotion: Bool
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.96 : 1)
-            .opacity(configuration.isPressed ? 0.86 : 1)
-            .animation(reduceMotion ? nil : .easeOut(duration: 0.13), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.95 : 1)
+            .opacity(configuration.isPressed ? 0.82 : 1)
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.10), value: configuration.isPressed)
     }
 }

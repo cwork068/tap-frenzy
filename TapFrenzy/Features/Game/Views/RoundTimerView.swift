@@ -3,6 +3,9 @@ import SwiftUI
 struct RoundTimerView: View {
     let secondsRemaining: Int
     let progress: Double
+    let size: CGFloat
+    let isPlaying: Bool
+    let action: () -> Void
 
     private var timerColor: Color {
         switch secondsRemaining {
@@ -13,32 +16,19 @@ struct RoundTimerView: View {
     }
 
     var body: some View {
-        VStack(spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Time remaining")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(GameTheme.secondaryText)
-                Spacer()
-                Text("\(secondsRemaining)s")
-                    .font(.headline.monospacedDigit())
-                    .foregroundStyle(timerColor)
-            }
-            GeometryReader { geometry in
-                Capsule()
-                    .fill(.white.opacity(0.10))
-                    .overlay(alignment: .leading) {
-                        Capsule()
-                            .fill(timerColor)
-                            .frame(width: geometry.size.width * CGFloat(progress))
-                    }
-            }
-            .frame(height: 7)
-            .accessibilityHidden(true)
+        ZStack {
+            Circle()
+                .stroke(GameTheme.track, lineWidth: 9)
+                .accessibilityHidden(true)
+            Circle()
+                .trim(from: 0, to: progress)
+                .stroke(timerColor, style: StrokeStyle(lineWidth: 9, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .accessibilityHidden(true)
+            TapControl(size: size - 32, secondsRemaining: secondsRemaining,
+                       isPlaying: isPlaying, action: action)
         }
-        .padding(16)
-        .background(GameTheme.surface, in: RoundedRectangle(cornerRadius: 18))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Time remaining")
-        .accessibilityValue("\(secondsRemaining) seconds")
+        .frame(width: size, height: size)
+        .padding(5)
     }
 }
