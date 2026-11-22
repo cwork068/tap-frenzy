@@ -1,31 +1,35 @@
 # Tap Frenzy
 
-Tap Frenzy is a SwiftUI game for iPhone on iOS 17 or later. The first tap starts a 10-second round and scores one point. Tap as fast as you can, then compare your result with your best score. The app saves the best score and completed round count across launches.
+Tap Frenzy is a SwiftUI game for iPhone on iOS 17 or later. Its home screen offers two modes: the original 10-second Tap Frenzy round and a 60-second Light It Up card challenge. Each mode keeps its own best score on the device.
 
 ## Architecture
 
 ```text
 TapFrenzy/
 ├── App/
-│   └── TapFrenzyApp.swift
+│   ├── TapFrenzyApp.swift
+│   └── HomeView.swift
 └── Features/
     └── Game/
         ├── Model/
-        │   └── GameRound.swift
+        │   ├── GameRound.swift
+        │   └── LightItUpRound.swift
         └── Views/
             ├── GameView.swift
             ├── GameTheme.swift
             ├── RoundTimerView.swift
-            └── TapControl.swift
+            ├── TapControl.swift
+            └── LightItUpView.swift
 Tests/
-└── GameRoundChecks.swift
+├── GameRoundChecks.swift
+└── LightItUpChecks.swift
 ```
 
-The code is organized by feature. `GameRound` is a Swift value type with idle, playing, and game-over states. It takes `ContinuousClock` instants as inputs, so the round checks exercise deadlines without waiting 10 seconds. A single deadline determines scoring and completion even if the app sleeps or a screen refresh is late. `GameView` owns the round through `@State` and persists the best score under its original `highScore` key, completed rounds under `gamesPlayed`, and the appearance choice under `appearanceMode`. Completion is handled once per round.
+The code is organized by feature. Both round models take `ContinuousClock` instants so deadline checks can run without waiting. Tap Frenzy preserves its original `highScore` key and `gamesPlayed` count. Light It Up uses `lightItUpHighScore` and `lightItUpRounds`, with three lives and four levels at 15-second intervals. Its card counts are 3, 4, 6, and 9; lit windows shorten from 1.2 to 0.9 to 0.7 to 0.5 seconds. Appearance remains stored under `appearanceMode`.
 
 ## Visual theme
 
-The game offers System, Light, and Dark appearances. Adaptive colours keep the button, text, and countdown ring readable in each mode. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The score uses stable digit widths, accepted taps give light haptic feedback, and animations respect Reduce Motion. The top bar shows the best score; the bottom stats panel shows completed rounds and the last score. The last score uses a new `lastScore` key and appears after the first completed round on an upgraded install.
+The game offers System, Light, and Dark appearances. Backgrounds, surfaces, text, and status colours use Apple's dynamic iOS system colours, including the system Dark appearance. The numeric countdown stays inside the TAP button while the ring moves from green to amber to red. The top bar shows Tap Frenzy's best score; its bottom stats panel shows completed rounds and the last score. The last score appears after the first completed round on an upgraded install.
 
 ## Build from Windows
 
@@ -44,10 +48,12 @@ Download `TapFrenzy-Simulator.zip` from the latest successful Codemagic build's 
 
 Clone the repository on a Mac, open `TapFrenzy.xcodeproj`, select an iPhone simulator with iOS 17 or later, and press **⌘R**. No Homebrew installation is required. For a physical iPhone, select a signing team in the Xcode target settings first.
 
-- Confirm the first tap starts the timer and scores one point. Tap rapidly and watch the score increase.
+- On the home screen, open each mode and confirm the back button returns to the mode list.
+- In Tap Frenzy, confirm the first tap starts the timer and scores one point. Tap rapidly and watch the score increase.
 - Let the timer expire. Check the final score, best score, and completed round count. Tap **Play Again** to return to idle, then **TAP** to start the next round.
 - Beat your previous best, then complete a lower-scoring round. Force-quit and reopen the app. Check that the best score, round count, and last score persist.
 - Switch between System, Light, and Dark during a round. Confirm the score and countdown continue, and that the selection persists after a relaunch.
 - Background the app past the deadline, return, and check that the result appears without awarding a late tap.
 - Rotate during a round and test a compact iPhone. Check that the score, timer, and button remain usable.
 - Enable Reduce Motion and check that the score and button can be used without their animations.
+- In Light It Up, tap any card to start. Catch a lit card to score; miss or tap the wrong card to lose a life. Check the grid and shorter windows at levels 2 through 4, and verify its separate best score after relaunch.

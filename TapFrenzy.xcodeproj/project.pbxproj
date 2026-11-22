@@ -13,6 +13,9 @@
 		A00000000000000000000013 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000023 /* GameView.swift */; };
 		A00000000000000000000014 /* RoundTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000024 /* RoundTimerView.swift */; };
 		A00000000000000000000015 /* TapControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000025 /* TapControl.swift */; };
+		A00000000000000000000016 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* HomeView.swift */; };
+		A00000000000000000000017 /* LightItUpRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000028 /* LightItUpRound.swift */; };
+		A00000000000000000000018 /* LightItUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000029 /* LightItUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +26,9 @@
 		A00000000000000000000024 /* RoundTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundTimerView.swift; sourceTree = "<group>"; };
 		A00000000000000000000025 /* TapControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapControl.swift; sourceTree = "<group>"; };
 		A00000000000000000000026 /* TapFrenzy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TapFrenzy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000027 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A00000000000000000000028 /* LightItUpRound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightItUpRound.swift; sourceTree = "<group>"; };
+		A00000000000000000000029 /* LightItUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightItUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000020 /* TapFrenzyApp.swift */,
+				A00000000000000000000027 /* HomeView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -82,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000021 /* GameRound.swift */,
+				A00000000000000000000028 /* LightItUpRound.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -93,6 +101,7 @@
 				A00000000000000000000023 /* GameView.swift */,
 				A00000000000000000000024 /* RoundTimerView.swift */,
 				A00000000000000000000025 /* TapControl.swift */,
+				A00000000000000000000029 /* LightItUpView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -178,6 +187,9 @@
 				A00000000000000000000013 /* GameView.swift in Sources */,
 				A00000000000000000000014 /* RoundTimerView.swift in Sources */,
 				A00000000000000000000015 /* TapControl.swift in Sources */,
+				A00000000000000000000016 /* HomeView.swift in Sources */,
+				A00000000000000000000017 /* LightItUpRound.swift in Sources */,
+				A00000000000000000000018 /* LightItUpView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

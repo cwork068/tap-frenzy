@@ -1,0 +1,46 @@
+@main
+struct LightItUpChecks {
+    static func main() {
+        let start = ContinuousClock.now
+        var round = LightItUpRound(bestScore: 2)
+        precondition(round.tap(card: 0, at: start, nextCard: 1) == .started)
+        precondition(round.phase == .playing && round.score == 0 && round.litCard == 1)
+        precondition(round.tap(card: 1, at: start + .milliseconds(500), nextCard: 0) == .correct)
+        precondition(round.score == 1 && round.lives == 3)
+        precondition(!round.advance(to: start + .seconds(1), nextCard: 0))
+        precondition(round.litCard == 0)
+        precondition(round.tap(card: 2, at: start + .seconds(1.1), nextCard: 1) == .wrong)
+        precondition(round.lives == 2)
+        precondition(!round.advance(to: start + .seconds(15), nextCard: 2))
+        precondition(round.level == 2 && round.cardCount == 4)
+        precondition(round.tap(card: 2, at: start + .seconds(15.95), nextCard: 1) == .missed)
+        precondition(round.lives == 1)
+        precondition(!round.advance(to: start + .seconds(30), nextCard: 5))
+        precondition(round.level == 3 && round.cardCount == 6)
+        precondition(round.advance(to: start + .seconds(45), nextCard: 0))
+        precondition(round.level == 4 && round.cardCount == 9)
+        precondition(round.phase == .over && round.lives == 0)
+        precondition(!round.advance(to: start + .seconds(60), nextCard: 0))
+        precondition(round.bestScore == 2 && !round.isNewBest)
+
+        round.reset()
+        precondition(round.phase == .idle && round.lives == 3 && round.score == 0)
+        precondition(round.tap(card: 0, at: start + .seconds(40), nextCard: 0) == .started)
+        precondition(round.tap(card: 0, at: start + .seconds(40.1), nextCard: 0) == .correct)
+        precondition(!round.advance(to: start + .seconds(40.5), nextCard: 1))
+        precondition(round.tap(card: 1, at: start + .seconds(40.6), nextCard: 0) == .correct)
+        precondition(round.advance(to: start + .seconds(100), nextCard: 0))
+        precondition(round.score == 2 && !round.isNewBest)
+
+        round.reset()
+        precondition(round.tap(card: 0, at: start + .seconds(110), nextCard: 0) == .started)
+        precondition(round.tap(card: 0, at: start + .seconds(110.1), nextCard: 0) == .correct)
+        precondition(!round.advance(to: start + .seconds(110.5), nextCard: 1))
+        precondition(round.tap(card: 1, at: start + .seconds(110.6), nextCard: 0) == .correct)
+        precondition(!round.advance(to: start + .seconds(111), nextCard: 2))
+        precondition(round.tap(card: 2, at: start + .seconds(111.1), nextCard: 0) == .correct)
+        precondition(round.advance(to: start + .seconds(170), nextCard: 0))
+        precondition(round.score == 3 && round.bestScore == 3 && round.isNewBest)
+        print("Light It Up checks passed")
+    }
+}

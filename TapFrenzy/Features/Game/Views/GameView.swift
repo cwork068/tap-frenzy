@@ -6,7 +6,6 @@ struct GameView: View {
     @AppStorage("highScore") private var highScore = 0
     @AppStorage("gamesPlayed") private var gamesPlayed = 0
     @AppStorage("lastScore") private var lastScore = -1
-    @AppStorage("appearanceMode") private var appearanceMode = AppearanceMode.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
@@ -107,36 +106,11 @@ struct GameView: View {
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("All-time best, \(highScore)")
-            appearanceMenu
+            AppearanceMenu()
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .background(GameTheme.surface, in: RoundedRectangle(cornerRadius: 18))
-    }
-
-    private var appearanceMenu: some View {
-        let current = AppearanceMode(rawValue: appearanceMode) ?? .system
-        return Menu {
-            ForEach(AppearanceMode.allCases) { mode in
-                Button {
-                    appearanceMode = mode.rawValue
-                } label: {
-                    if mode == current {
-                        Label(mode.title, systemImage: "checkmark")
-                    } else {
-                        Text(mode.title)
-                    }
-                }
-            }
-        } label: {
-            Image(systemName: "circle.lefthalf.filled")
-                .font(.title3)
-                .foregroundStyle(GameTheme.accent)
-                .frame(width: 44, height: 44)
-                .contentShape(Rectangle())
-        }
-        .accessibilityLabel("Appearance, \(current.title) selected")
-        .accessibilityHint("Choose System, Light, or Dark")
     }
 
     private var scoreView: some View {
@@ -185,7 +159,7 @@ struct GameView: View {
         VStack(spacing: 6) {
             Text(round.isNewBest ? "New Personal Best" : "Round Complete")
                 .font(.title3.weight(.bold))
-                .foregroundStyle(round.isNewBest ? GameTheme.accent : GameTheme.text)
+                .foregroundStyle(GameTheme.text)
             Text("All-time best: \(round.bestScore.formatted())")
                 .font(.subheadline)
                 .foregroundStyle(GameTheme.secondaryText)

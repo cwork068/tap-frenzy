@@ -6,7 +6,9 @@ struct TapFrenzyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            GameView()
+            NavigationStack {
+                HomeView()
+            }
                 .preferredColorScheme(AppearanceMode(rawValue: appearanceMode)?.colorScheme)
         }
     }
