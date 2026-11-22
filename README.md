@@ -36,7 +36,7 @@ Two stretch features are implemented from the tutorial brief. The score animates
 3. Select the branch you pushed and the **Tap Frenzy iOS Build** workflow. The workflow uses a Mac mini M2 and builds for the iOS Simulator with signing disabled.
 4. Check for `Round checks passed` in the scoring and timing step and `** BUILD SUCCEEDED **` in the compile log. Match the commit shown by Codemagic to your submission commit.
 
-Codemagic generates `TapFrenzy.xcodeproj` from `project.yml` when the project is absent. A successful build offers `TapFrenzy-Xcode.zip` in **Artifacts**. It contains the project and its sources. If your submission needs an Xcode project in GitHub, extract the ZIP, copy just `TapFrenzy.xcodeproj` to the repository root, commit it, and rebuild that commit. If you later add or relocate source files, regenerate the project or update its file references in Xcode.
+The repository includes `TapFrenzy.xcodeproj`, so a fresh clone opens in Xcode without installing XcodeGen. Codemagic can still generate the project from `project.yml` if the project file is absent. If you add or relocate source files, update their file references in Xcode and keep `project.yml` in sync for the Codemagic fallback.
 
 ## Run in a Windows browser
 
@@ -44,7 +44,7 @@ Download `TapFrenzy-Simulator.zip` from the latest successful Codemagic build's 
 
 ## Run and check in Xcode
 
-Extract the artifact, open `TapFrenzy.xcodeproj`, select an iPhone simulator, and press **⌘R**. On a Mac with XcodeGen installed, you can also run `xcodegen generate` in the repository root.
+Clone the repository on a Mac, open `TapFrenzy.xcodeproj`, select an iPhone simulator with iOS 17 or later, and press **⌘R**. No Homebrew installation is required. For a physical iPhone, select a signing team in the Xcode target settings first.
 
 - Confirm the first tap starts the timer and scores one point. Tap rapidly and watch the score increase.
 - Let the timer expire. Check the final score, best score, and completed round count. Tap **Try again** to start a fresh round.
